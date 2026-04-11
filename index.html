@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NLP Quiz Pro</title>
     <style>
         body {
@@ -28,6 +30,7 @@
         #score {
             text-align: center;
             font-weight: bold;
+            font-size: 18px;
         }
 
         /* Progress bar */
@@ -83,6 +86,7 @@
 
         input[type="radio"] {
             margin-right: 10px;
+            transform: scale(1.2); /* Makes the radio button a bit bigger */
         }
 
         .correct-option {
@@ -103,6 +107,7 @@
             color: white;
             cursor: pointer;
             transition: 0.2s;
+            
         }
 
         button:hover {
@@ -138,17 +143,29 @@
             }
 
             h2 {
-                font-size: 20px;
+                font-size: 24px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .question p {
+                font-size: 18px; /* Larger Question Text */
             }
 
             label {
-                font-size: 14px;
-                padding: 8px;
+                font-size: 16px;
+                padding: 10px;
             }
 
             button {
                 width: 100%;
                 margin-top: 10px;
+                padding: 15px; /* Taller button for mobile */
+                font-size: 18px;
+                font-weight: bold;
             }
         }
     </style>
