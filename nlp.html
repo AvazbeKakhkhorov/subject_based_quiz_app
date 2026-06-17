@@ -326,6 +326,11 @@ function loadQuiz() {
 
 function checkAnswer(qIndex, correct) {
     const options = document.getElementsByName("q" + qIndex);
+    
+    // BUG FIX: check disabled state instead of result text,
+    // so the "Select an option" warning doesn't block re-checking.
+    if (options[0] && options[0].disabled) return;
+    
     let selected = -1;
 
     Array.from(options).forEach((opt, i) => {
