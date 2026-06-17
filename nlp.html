@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLP Quiz Pro</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        /* #score {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        } */
+
+        #score {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            /* New Sticky Styles */
+            position: sticky;
+            top: 0px; 
+            background: rgba(255, 255, 255, 0.95); /* Slight transparency looks modern */
+            padding: 15px;
+            z-index: 100; /* Keeps it on top of the questions */
+            border-bottom: 2px solid #667eea; /* A nice border to match your theme */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Adds a shadow when scrolling */
+        }
+
+        /* Progress bar */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar-bg {
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 12px;
+            width: 0%;
+            background: #4CAF50;
+            transition: 0.3s;
+        }
+
+        #progressText {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* Question Card */
+        .question {
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: #f9f9f9;
+            transition: 0.2s;
+        }
+
+        .question:hover {
+            transform: scale(1.01);
+        }
+
+        /* Options */
+        label {
+            display: block;
+            padding: 10px;
+            margin: 6px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            transition: 0.2s;
+        }
+
+        label:hover {
+            background: #f1f1f1;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2); /* Makes the radio button a bit bigger */
+        }
+
+        .correct-option {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+
+        .wrong-option {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .result {
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .correct { color: green; }
+        .wrong { color: red; }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reset-btn {
+            background: #ff6b6b;
+        }
+
+        .reset-btn:hover {
+            background: #e55050;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .question p {
+                font-size: 18px; /* Larger Question Text */
+            }
+
+            label {
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin-top: 10px;
+                padding: 15px; /* Taller button for mobile */
+                font-size: 18px;
+                font-weight: bold;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+        <h2>NLP Practice Quiz</h2>
+        <button class="reset-btn" onclick="loadQuiz()">🔄 Reset</button>
+    </div>
+
+    <p id="score">Score: 0 / 0</p>
+
+    <div class="progress-container">
+        <div class="progress-bar-bg">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <p id="progressText">0 / 0 Completed</p>
+    </div>
+
+    <div id="quiz"></div>
+
+</div>
+
+<script>
+
+let score = 0;
+let attempted = 0;
+
+/* Use your FULL 60 MCQs here */
+const questions = [
+/* ===== SET 1 ===== */
+    {q:"NLP stands for:",options:["Neural Language Processing","Natural Language Processing","Numeric Language Programming","Network Language Protocol"],answer:1},
+    {q:"Which phase deals with word-level analysis?",options:["Syntax","Semantics","Lexical Analysis","Pragmatics"],answer:2},
+    {q:"Tokenization is part of:",options:["Semantic analysis","Lexical analysis","Pragmatic analysis","Discourse analysis"],answer:1},
+    {q:"Meaning of a sentence is analyzed in:",options:["Syntax","Semantics","Pragmatics","Lexical"],answer:1},
+    {q:"Context beyond sentence is handled by:",options:["Syntax","Discourse analysis","Semantics","Lexical"],answer:1},
+    {q:"Pragmatics deals with:",options:["Grammar rules","Literal meaning","Contextual meaning","Word formation"],answer:2},
+    {q:"Which phase identifies parts of speech?",options:["Syntax","Lexical","Semantic","Pragmatic"],answer:1},
+    {q:"POS tagging belongs to:",options:["Syntax","Lexical","Semantic","Discourse"],answer:1},
+    {q:"Which phase checks grammatical correctness?",options:["Semantic","Syntax","Pragmatics","Discourse"],answer:1},
+    {q:"Word ambiguity is handled in:",options:["Lexical analysis","Syntax","Semantics","Pragmatics"],answer:2},
+    {q:"“Bank” ambiguity is:",options:["Syntax ambiguity","Lexical ambiguity","Semantic ambiguity","Pragmatic ambiguity"],answer:1},
+    {q:"Sentence structure is analyzed using:",options:["Tokenizer","Parser","Stemmer","Tagger"],answer:1},
+    {q:"Which phase resolves reference like “he”, “she”?",options:["Lexical","Syntax","Discourse","Semantic"],answer:2},
+    {q:"Pragmatics considers:",options:["Only words","Only grammar","Speaker intention","Sentence length"],answer:2},
+    {q:"Morphological analysis is part of:",options:["Syntax","Lexical","Semantic","Pragmatic"],answer:1},
+    {q:"Root word identification is called:",options:["Parsing","Stemming","Tagging","Chunking"],answer:1},
+    {q:"Syntax analysis uses:",options:["Grammar rules","Dictionaries","Context","Speech signals"],answer:0},
+    {q:"Semantic analysis focuses on:",options:["Word form","Sentence meaning","Pronunciation","Token count"],answer:1},
+    {q:"Discourse analysis helps in:",options:["Word recognition","Sentence linking","Grammar correction","Tokenization"],answer:1},
+    {q:"Which phase interprets sarcasm?",options:["Syntax","Semantic","Pragmatic","Lexical"],answer:2},
+    {q:"“She is cold” meaning depends on:",options:["Syntax","Semantics","Pragmatics","Lexical"],answer:2},
+    {q:"Grammar trees are used in:",options:["Syntax","Semantics","Lexical","Pragmatics"],answer:0},
+    {q:"Which is NOT an NLP phase?",options:["Lexical","Semantic","Compilation","Pragmatic"],answer:2},
+    {q:"Order of NLP phases starts with:",options:["Syntax","Semantic","Lexical","Pragmatic"],answer:2},
+
+    /* ===== SET 2 ===== */
+    {q:"Finite Automaton is used for:",options:["Image processing","Pattern recognition","Video editing","Networking"],answer:1},
+    {q:"A Finite Automaton processes input:",options:["Randomly","Character by character","Word by word","Sentence by sentence"],answer:1},
+    {q:"Which is NOT a component of FA?",options:["States","Alphabet","Compiler","Transition function"],answer:2},
+    {q:"Accepting state is also called:",options:["Start state","Final state","Dead state","Null state"],answer:1},
+    {q:"Transition function defines:",options:["Input format","Movement between states","Output format","Grammar rules"],answer:1},
+    {q:"FA is mainly used in NLP for:",options:["Image recognition","Token recognition","Speech synthesis","Data mining"],answer:1},
+    {q:"Which is an application of FA?",options:["Spell checking","Video compression","Networking","Cloud storage"],answer:0},
+    {q:"Alphabet in FA refers to:",options:["Only letters","Set of input symbols","Only numbers","Words"],answer:1},
+    {q:"FA accepts input when it reaches:",options:["Start state","Final state","Dead state","Loop state"],answer:1},
+    {q:"POS tagging means:",options:["Pattern recognition","Assigning grammatical labels","Sentence parsing","Token removal"],answer:1},
+    {q:"POS tagging is done at:",options:["Character level","Word level","Sentence level","Paragraph level"],answer:1},
+    {q:"NN represents:",options:["Verb","Noun","Adjective","Adverb"],answer:1},
+    {q:"Parsing is associated with:",options:["Lexical analysis","Syntax analysis","Semantic analysis","Pragmatics"],answer:1},
+    {q:"VB represents:",options:["Noun","Verb","Adjective","Preposition"],answer:1},
+    {q:"JJ represents:",options:["Verb","Adjective","Adverb","Noun"],answer:1},
+    {q:"RB represents:",options:["Noun","Verb","Adverb","Determiner"],answer:2},
+    {q:"DT represents:",options:["Verb","Determiner","Adverb","Noun"],answer:1},
+    {q:"POS tagging is used in:",options:["Machine translation","Video editing","Hardware design","Networking"],answer:0},
+    {q:"Which sentence is correctly tagged?",options:["Dog/VB runs/NN","Dog/NN runs/VB","Dog/JJ runs/DT","Dog/RB runs/NN"],answer:1},
+    {q:"FA is useful for:",options:["Grammar checking","Pattern matching","Sentence translation","Speech output"],answer:1},
+    {q:"Which is an example of FA input?",options:["Image","Text characters","Audio","Video"],answer:1},
+    {q:"POS tagging helps in:",options:["Word classification","Image detection","Sound processing","Networking"],answer:0},
+    {q:"FA is used in:",options:["Regular expressions","Image compression","Audio editing","Video streaming"],answer:0},
+    {q:"Morphological analysis is related to:",options:["Image processing","Word structure","Networking","Hardware"],answer:1},
+    {q:"Example of POS tagging:",options:["Run/NN fast/VB","Run/VB fast/RB","Run/JJ fast/DT","Run/RB fast/NN"],answer:1},
+    
+    /* ===== SET 3 ===== */
+    {q:"Relation extraction is used to:",options:["Translate text","Identify relationships between entities","Perform spelling correction","Generate summaries"],answer:1},
+    {q:"Which representation is commonly used for relation extraction?",options:["Images","Word sequences","Audio signals","Binary trees only"],answer:1},
+    {q:"Dependency paths help in:",options:["Tokenization","Finding syntactic relationships","Stemming","POS tagging only"],answer:1},
+    {q:"Subsequence kernels are used to:",options:["Reduce noise","Measure similarity between sequences","Translate text","Remove stopwords"],answer:1},
+    {q:"In NLP, a kernel function is mainly used in:",options:["Database systems","Machine learning algorithms","Operating systems","Networking"],answer:1},
+    {q:"Which captures long-distance dependencies?",options:["Bag of words","Dependency paths","Stopword removal","Tokenization"],answer:1},
+    {q:"Relation extraction is a subtask of:",options:["Computer vision","Natural Language Processing","Data mining only","Cryptography"],answer:1},
+    {q:"Which technique considers ordered sequences?",options:["Subsequence kernel","Hashing","Parsing trees only","Compression"],answer:0},
+    {q:"Dependency parsing represents:",options:["Word frequency","Grammatical structure","Sentence length","Phonetics"],answer:1},
+    {q:"Start state in FA is:",options:["Final state","Initial state","Intermediate state","Dead state"],answer:1},
+    {q:"Which model is often used with kernels?",options:["SVM","KNN","Naive Bayes","Decision Tree"],answer:0}
+];
+
+
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+function loadQuiz() {
+
+    score = 0;
+    attempted = 0;
+
+    document.getElementById("score").innerHTML = "Score: 0 / 0";
+    document.getElementById("progressBar").style.width = "0%";
+    document.getElementById("progressText").innerHTML = "0 / " + questions.length + " Completed";
+
+    const quizDiv = document.getElementById("quiz");
+    quizDiv.innerHTML = "";
+
+    const shuffled = shuffle([...questions]);
+
+    shuffled.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "question";
+
+        let html = `<p><b>Q${index+1}: ${item.q}</b></p>`;
+
+        item.options.forEach((opt, i) => {
+            html += `
+                <label>
+                    <input type="radio" name="q${index}" value="${i}">
+                    ${opt}
+                </label>
+            `;
+        });
+
+        html += `<button onclick="checkAnswer(${index}, ${item.answer})">Check Answer</button>`;
+        html += `<p id="result${index}" class="result"></p>`;
+
+        div.innerHTML = html;
+        quizDiv.appendChild(div);
+    });
+}
+
+function checkAnswer(qIndex, correct) {
+    const options = document.getElementsByName("q" + qIndex);
+    
+    // BUG FIX: check disabled state instead of result text,
+    // so the "Select an option" warning doesn't block re-checking.
+    if (options[0] && options[0].disabled) return;
+    
+    let selected = -1;
+
+    Array.from(options).forEach((opt, i) => {
+        if (opt.checked) selected = i;
+    });
+
+    const result = document.getElementById("result" + qIndex);
+
+    if (selected === -1) {
+        result.innerHTML = "⚠️ Select an option!";
+        return;
+    }
+
+    if (result.innerHTML !== "") return;
+
+    attempted++;
+
+    Array.from(options).forEach((opt, i) => {
+        const label = opt.parentElement;
+
+        if (i === correct) label.classList.add("correct-option");
+        if (i === selected && selected !== correct) label.classList.add("wrong-option");
+
+        opt.disabled = true;
+    });
+
+    if (selected === correct) {
+        score++;
+        result.innerHTML = "✅ Correct!";
+        result.className = "result correct";
+    } else {
+        const correctText = options[correct].parentElement.innerText;
+        result.innerHTML = "❌ Wrong! Correct answer: " + correctText;
+        result.className = "result wrong";
+    }
+
+    document.getElementById("score").innerHTML = `Score: ${score} / ${attempted}`;
+
+    const percent = (attempted / questions.length) * 100;
+    document.getElementById("progressBar").style.width = percent + "%";
+    document.getElementById("progressText").innerHTML = `${attempted} / ${questions.length} Completed`;
+}
+
+loadQuiz();
+
+</script>
+
+</body>
+</html>
